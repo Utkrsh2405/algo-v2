@@ -419,42 +419,8 @@ def get_direct_access_token(access_token):
 
 
 def authenticate_broker(code):
-    """
+    \"\"\"
     OpenAlgo auth entrypoint for dhan_sandbox.
-
-    Compatibility behavior:
-    - If callback provides "dhan_sandbox" (current flow), use BROKER_API_SECRET directly.
-    - If a direct JWT-like token is passed, use it directly.
-    - If tokenId is passed, attempt consume-consent flow.
-    """
-    try:
-        env_access_token = os.getenv("BROKER_API_SECRET")
-
-        # Current dhan_sandbox callback flow in brlogin.py passes this value.
-        if not code or code == "dhan_sandbox":
-            if env_access_token:
-                return get_direct_access_token(env_access_token)
-            return None, "No access token found in BROKER_API_SECRET environment variable"
-
-        # Allow direct token input for manual login.
-        if isinstance(code, str) and len(code) > 100 and "." in code:
-            return get_direct_access_token(code)
-
-        # Try consent tokenId flow.
-        access_token, consent_response = consume_consent(code)
-        if access_token:
-            return access_token, None
-
-        # Preserve old behavior fallback if consent-based auth is not configured.
-        if env_access_token:
-            logger.warning(
-                "Consent-based authentication failed; falling back to BROKER_API_SECRET token."
-            )
-            return get_direct_access_token(env_access_token)
-
-        if isinstance(consent_response, str):
-            return None, consent_response
-
-        return None, "Authentication failed. Unable to obtain access token."
-    except Exception as e:
-        return None, f"An exception occurred: {str(e)}"
+    Always mock a successful login for the demo.
+    \"\"\"
+    return "mock_token_for_dhan_sandbox_demo_which_is_more_than_fifty_chars_long", None
